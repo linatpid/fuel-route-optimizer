@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fuel Route Optimizer</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    :root { --bg:#0f172a; --panel:#1e293b; --accent:#22c55e; --text:#e2e8f0; --muted:#94a3b8; }
+    * { box-sizing: border-box; }
+    html, body { margin:0; height:100%; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:var(--text); }
+    #app { display:flex; height:100%; }
+    #sidebar { width:380px; min-width:380px; background:var(--bg); padding:20px; overflow-y:auto; }
+    #map { flex:1; }
+    h1 { font-size:18px; margin:0 0 4px; }
+    .sub { color:var(--muted); font-size:12px; margin-bottom:16px; }
+    form { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
+    label { font-size:12px; color:var(--muted); }
+    input { padding:9px 10px; border-radius:8px; border:1px solid #334155; background:var(--panel); color:var(--text); font-size:14px; }
+    button { padding:10px; border:0; border-radius:8px; background:var(--accent); color:#04210f; font-weight:700; font-size:14px; cursor:pointer; }
+    button:disabled { opacity:.6; cursor:wait; }
+    .summary { background:var(--panel); border-radius:10px; padding:14px; margin-bottom:14px; }
+    .summary .big { font-size:28px; font-weight:800; color:var(--accent); }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:8px 12px; margin-top:10px; font-size:13px; }
+    .grid .k { color:var(--muted); }
+    .stop { background:var(--panel); border-radius:8px; padding:10px 12px; margin-bottom:8px; font-size:13px; border-left:3px solid var(--accent); }
+    .stop .name { font-weight:700; }
+    .stop .meta { color:var(--muted); font-size:12px; margin-top:2px; }
+    .err { background:#7f1d1d; color:#fecaca; padding:10px; border-radius:8px; font-size:13px; }
+    .pill { display:inline-block; background:#334155; color:var(--text); border-radius:999px; font-size:11px; padding:2px 8px; margin-left:6px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="sidebar">
+      <h1>⛽ Fuel Route Optimizer</h1>
+      <div class="sub">Cheapest fuel stops along a US route · 500&nbsp;mi range · 10&nbsp;mpg</div>
+      <form id="form">
+        <label for="start">Start</label>
+        <input id="start" name="start" value="{{ start }}" />
+        <label for="finish">Finish</label>
+        <input id="finish" name="finish" value="{{ finish }}" />
+        <button type="submit" id="go">Plan route</button>
+      </form>
+      <div id="result"></div>
+    </div>
+    <div id="map"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([39.5, -98.35], 4);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19, attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    let layer = L.layerGroup().addTo(map);
+    const fmtUSD = n => '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+    async function plan(evt) {
+      if (evt) evt.preventDefault();
+      const start = document.getElementById('start').value;
+      const finish = document.getElementById('finish').value;
+      const btn = document.getElementById('go');
+      const result = document.getElementById('result');
+      btn.disabled = true; btn.textContent = 'Planning…';
+      result.innerHTML = '';
+      layer.clearLayers();
+      try {
+        const url = `/api/route?start=${encodeURIComponent(start)}&finish=${encodeURIComponent(finish)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Request failed');
+        draw(data);
+      } catch (e) {
+        result.innerHTML = `<div class="err">${e.message}</div>`;
+      } finally {
+        btn.disabled = false; btn.textContent = 'Plan route';
+      }
+    }
+
+    function draw(data) {
+      const coords = data.route.geometry.coordinates.map(([lon, lat]) => [lat, lon]);
+      const line = L.polyline(coords, {color: '#22c55e', weight: 5, opacity: .85}).addTo(layer);
+
+      L.marker(coords[0]).addTo(layer).bindPopup(`<b>Start</b><br>${data.start.label}`);
+      L.marker(coords[coords.length - 1]).addTo(layer).bindPopup(`<b>Finish</b><br>${data.finish.label}`);
+
+      data.fuel_stops.forEach(s => {
+        L.circleMarker([s.latitude, s.longitude], {
+          radius: 8, color: '#04210f', weight: 2, fillColor: '#facc15', fillOpacity: 1
+        }).addTo(layer).bindPopup(
+          `<b>#${s.order} ${s.name}</b><br>${s.city}, ${s.state}<br>` +
+          `$${s.price_per_gallon}/gal · ${s.gallons_purchased} gal · ${fmtUSD(s.cost_usd)}`
+        );
+      });
+
+      map.fitBounds(line.getBounds().pad(0.15));
+
+      const sm = data.summary;
+      const stopsHtml = data.fuel_stops.map(s => `
+        <div class="stop">
+          <div class="name">#${s.order} ${s.name} <span class="pill">$${s.price_per_gallon}/gal</span></div>
+          <div class="meta">${s.city}, ${s.state} · mile ${s.distance_from_start_miles} · ${s.gallons_purchased} gal · ${fmtUSD(s.cost_usd)}</div>
+        </div>`).join('');
+
+      document.getElementById('result').innerHTML = `
+        <div class="summary">
+          <div class="k" style="font-size:12px;color:var(--muted)">Total fuel cost</div>
+          <div class="big">${fmtUSD(sm.total_fuel_cost_usd)}</div>
+          <div class="grid">
+            <div class="k">Distance</div><div>${data.route.total_distance_miles.toLocaleString()} mi</div>
+            <div class="k">Drive time</div><div>${data.route.estimated_drive_time_hours} h</div>
+            <div class="k">Fuel stops</div><div>${sm.number_of_fuel_stops}</div>
+            <div class="k">Total fuel</div><div>${sm.total_gallons} gal</div>
+            <div class="k">Avg price</div><div>$${sm.average_price_per_gallon}/gal</div>
+          </div>
+        </div>
+        ${stopsHtml}`;
+    }
+
+    document.getElementById('form').addEventListener('submit', plan);
+    plan();
+  </script>
+</body>
+</html>

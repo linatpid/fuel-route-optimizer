@@ -1,0 +1,73 @@
+{
+  "info": {
+    "name": "Fuel Route Optimizer (Spotter assessment)",
+    "description": "Plan a fuel-optimised route across the USA. Returns the route geometry, the cost-optimal fuel stops for a 500-mile-range / 10-mpg vehicle, and the total fuel cost.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000" }
+  ],
+  "item": [
+    {
+      "name": "Route - Chicago to Houston (GET)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/route?start=Chicago, IL&finish=Houston, TX",
+          "host": ["{{base_url}}"],
+          "path": ["api", "route"],
+          "query": [
+            { "key": "start", "value": "Chicago, IL" },
+            { "key": "finish", "value": "Houston, TX" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Route - New York to Los Angeles (GET)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/route?start=New York, NY&finish=Los Angeles, CA",
+          "host": ["{{base_url}}"],
+          "path": ["api", "route"],
+          "query": [
+            { "key": "start", "value": "New York, NY" },
+            { "key": "finish", "value": "Los Angeles, CA" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Route - by coordinates, no geocoding (GET)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/route?start=41.85,-87.65&finish=29.76,-95.37",
+          "host": ["{{base_url}}"],
+          "path": ["api", "route"],
+          "query": [
+            { "key": "start", "value": "41.85,-87.65" },
+            { "key": "finish", "value": "29.76,-95.37" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Route - JSON body (POST)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"start\": \"Denver, CO\",\n  \"finish\": \"Dallas, TX\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/route",
+          "host": ["{{base_url}}"],
+          "path": ["api", "route"]
+        }
+      }
+    }
+  ]
+}

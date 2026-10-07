@@ -1,0 +1,225 @@
+{
+  "start": {
+    "query": "Chicago,IL",
+    "label": "Chicago, South Chicago Township, Cook County, Illinois, United States",
+    "latitude": 41.8755616,
+    "longitude": -87.6244212
+  },
+  "finish": {
+    "query": "Houston,TX",
+    "label": "Houston, Harris County, Texas, United States",
+    "latitude": 29.7589382,
+    "longitude": -95.3676974
+  },
+  "route": {
+    "total_distance_miles": 1086.6,
+    "estimated_drive_time_hours": 19.87,
+    "geometry": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          -87.624351,
+          41.875563
+        ],
+        "... 11449 points omitted ...",
+        [
+          -95.367863,
+          29.758731
+        ]
+      ]
+    }
+  },
+  "vehicle": {
+    "max_range_miles": 500.0,
+    "miles_per_gallon": 10.0,
+    "tank_capacity_gallons": 50.0
+  },
+  "fuel_stops": [
+    {
+      "order": 1,
+      "opis_id": 1653,
+      "name": "ROAD RANGER #187",
+      "address": "I-55, EXIT 289",
+      "city": "Chicago",
+      "state": "IL",
+      "price_per_gallon": 3.569,
+      "latitude": 41.85003,
+      "longitude": -87.65005,
+      "distance_from_start_miles": 2.0,
+      "detour_miles": 0.97,
+      "gallons_purchased": 0.202,
+      "cost_usd": 0.72
+    },
+    {
+      "order": 2,
+      "opis_id": 73127,
+      "name": "Gas N Wash",
+      "address": "I-55, EXIT 285",
+      "city": "Chicago",
+      "state": "IL",
+      "price_per_gallon": 3.399,
+      "latitude": 41.85003,
+      "longitude": -87.65005,
+      "distance_from_start_miles": 2.0,
+      "detour_miles": 0.97,
+      "gallons_purchased": 1.415,
+      "cost_usd": 4.81
+    },
+    {
+      "order": 3,
+      "opis_id": 69047,
+      "name": "SPEEDWAY #7461",
+      "address": "I-294 & SR-50/SR-31",
+      "city": "Alsip",
+      "state": "IL",
+      "price_per_gallon": 3.219,
+      "latitude": 41.66892,
+      "longitude": -87.73866,
+      "distance_from_start_miles": 16.2,
+      "detour_miles": 3.91,
+      "gallons_purchased": 0.465,
+      "cost_usd": 1.5
+    },
+    {
+      "order": 4,
+      "opis_id": 70108,
+      "name": "RICKY ROCKETS FUEL CENTER",
+      "address": "SR-50 & SR-83",
+      "city": "Midlothian",
+      "state": "IL",
+      "price_per_gallon": 3.099,
+      "latitude": 41.62531,
+      "longitude": -87.71755,
+      "distance_from_start_miles": 20.8,
+      "detour_miles": 1.45,
+      "gallons_purchased": 1.228,
+      "cost_usd": 3.81
+    },
+    {
+      "order": 5,
+      "opis_id": 73072,
+      "name": "QUIKTRIP #7204",
+      "address": "I-57, EXIT 337 & SR-50",
+      "city": "University Park",
+      "state": "IL",
+      "price_per_gallon": 3.079,
+      "latitude": 41.44298,
+      "longitude": -87.6836,
+      "distance_from_start_miles": 33.1,
+      "detour_miles": 3.88,
+      "gallons_purchased": 5.248,
+      "cost_usd": 16.16
+    },
+    {
+      "order": 6,
+      "opis_id": 68266,
+      "name": "FREDS FUEL AND FOOD #2",
+      "address": "I-57, EXIT 283 & US-24",
+      "city": "Gilman",
+      "state": "IL",
+      "price_per_gallon": 3.049,
+      "latitude": 40.7667,
+      "longitude": -87.99226,
+      "distance_from_start_miles": 85.6,
+      "detour_miles": 0.77,
+      "gallons_purchased": 12.447,
+      "cost_usd": 37.95
+    },
+    {
+      "order": 7,
+      "opis_id": 72592,
+      "name": "QUIKTRIP #7191",
+      "address": "US-45 & I-57",
+      "city": "Effingham",
+      "state": "IL",
+      "price_per_gallon": 2.999,
+      "latitude": 39.12004,
+      "longitude": -88.54338,
+      "distance_from_start_miles": 210.1,
+      "detour_miles": 1.33,
+      "gallons_purchased": 10.69,
+      "cost_usd": 32.06
+    },
+    {
+      "order": 8,
+      "opis_id": 69861,
+      "name": "HUCKS FOOD & FUEL #379",
+      "address": "I-57, EXIT 53",
+      "city": "Marion",
+      "state": "IL",
+      "price_per_gallon": 2.929,
+      "latitude": 37.73061,
+      "longitude": -88.93313,
+      "distance_from_start_miles": 317.0,
+      "detour_miles": 1.41,
+      "gallons_purchased": 47.781,
+      "cost_usd": 139.95
+    },
+    {
+      "order": 9,
+      "opis_id": 72594,
+      "name": "Quiktrip #7900",
+      "address": "I-30 & FM-989",
+      "city": "Texarkana",
+      "state": "TX",
+      "price_per_gallon": 2.857,
+      "latitude": 33.42513,
+      "longitude": -94.04769,
+      "distance_from_start_miles": 794.8,
+      "detour_miles": 2.79,
+      "gallons_purchased": 6.914,
+      "cost_usd": 19.76
+    },
+    {
+      "order": 10,
+      "opis_id": 72758,
+      "name": "CEFCO #1117",
+      "address": "I-20 EXIT 617",
+      "city": "Marshall",
+      "state": "TX",
+      "price_per_gallon": 2.832,
+      "latitude": 32.54487,
+      "longitude": -94.36742,
+      "distance_from_start_miles": 863.9,
+      "detour_miles": 1.0,
+      "gallons_purchased": 2.544,
+      "cost_usd": 7.21
+    },
+    {
+      "order": 11,
+      "opis_id": 72899,
+      "name": "RACEWAY #7002",
+      "address": "US 79 & 59",
+      "city": "Carthage",
+      "state": "TX",
+      "price_per_gallon": 2.821,
+      "latitude": 32.15738,
+      "longitude": -94.33742,
+      "distance_from_start_miles": 889.3,
+      "detour_miles": 1.74,
+      "gallons_purchased": 7.367,
+      "cost_usd": 20.78
+    },
+    {
+      "order": 12,
+      "opis_id": 69962,
+      "name": "LUFKIN TRAVEL PLAZA",
+      "address": "US-59 & CR-819",
+      "city": "Lufkin",
+      "state": "TX",
+      "price_per_gallon": 2.816,
+      "latitude": 31.33824,
+      "longitude": -94.7291,
+      "distance_from_start_miles": 963.0,
+      "detour_miles": 1.83,
+      "gallons_purchased": 12.354,
+      "cost_usd": 34.79
+    }
+  ],
+  "summary": {
+    "number_of_fuel_stops": 12,
+    "total_gallons": 108.655,
+    "total_fuel_cost_usd": 319.48,
+    "average_price_per_gallon": 2.94
+  }
+}
