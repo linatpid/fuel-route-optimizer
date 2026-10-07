@@ -17,6 +17,41 @@ key-less **OSRM** service; endpoint geocoding uses **Nominatim** (OpenStreetMap)
 
 ---
 
+## Quick start
+
+Requires Python 3.12+. No API keys, no external accounts.
+
+```bash
+git clone https://github.com/linatpid/fuel-route-optimizer.git
+cd fuel-route-optimizer
+
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+
+cp .env.example .env          # optional — defaults work without it
+python manage.py migrate      # create the SQLite schema
+python manage.py load_stations   # load ~8k stations (coords cache is committed; ~1s)
+python manage.py runserver
+```
+
+Then try it:
+
+```bash
+# JSON API
+curl "http://127.0.0.1:8000/api/route?start=Chicago,%20IL&finish=Houston,%20TX"
+
+# Interactive map in the browser
+open http://127.0.0.1:8000/demo
+```
+
+Run the tests with `python manage.py test routing` (19 tests).
+
+> The station coordinate cache (`routing/data/city_coords.json`) is committed, so
+> you do **not** need to run `build_geo_cache` or download anything — `load_stations`
+> works offline. Only re-run `build_geo_cache` if the station CSV changes.
+
+---
+
 ## Why it's fast and makes few external calls
 
 The dataset only gives each station a **name, city, state, and price — no
