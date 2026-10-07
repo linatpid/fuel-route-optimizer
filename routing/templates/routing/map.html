@@ -50,12 +50,15 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const map = L.map('map').setView([39.5, -98.35], 4);
-    // CARTO basemap: free, no API key, and (unlike OSM's public tiles) permits
-    // this kind of use. Dark theme to match the UI.
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19,
-      subdomains: 'abcd',
-      attribution: '© OpenStreetMap contributors © CARTO'
+    // Esri ArcGIS basemap: free, no API key required. Dark Gray Canvas (base +
+    // labels) to match the UI. Note Esri tiles use {z}/{y}/{x} order.
+    const esri = 'https://server.arcgisonline.com/ArcGIS/rest/services';
+    const esriAttr = 'Tiles © Esri | © OpenStreetMap contributors';
+    L.tileLayer(`${esri}/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}`, {
+      maxNativeZoom: 16, maxZoom: 19, attribution: esriAttr
+    }).addTo(map);
+    L.tileLayer(`${esri}/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}`, {
+      maxNativeZoom: 16, maxZoom: 19, attribution: esriAttr
     }).addTo(map);
 
     let layer = L.layerGroup().addTo(map);
