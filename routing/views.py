@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from urllib.parse import urlencode
+
+from django.shortcuts import redirect, render
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -36,6 +38,22 @@ def route_view(request):
     return Response(result)
 
 
+#: Canonical demo trip, used by both the reset endpoint and the map defaults.
+DEMO_START = "Chicago, IL"
+DEMO_FINISH = "Houston, TX"
+
+
+def demo_reset(request):
+    """Reset the demo to a clean, known state.
+
+    Redirects to the map pre-loaded with the canonical Chicago -> Houston trip,
+    ignoring whatever was typed before. Handy as the single URL to open at the
+    start of a screen recording so the demo always looks the same.
+    """
+    query = urlencode({"start": DEMO_START, "finish": DEMO_FINISH})
+    return redirect(f"/map?{query}")
+
+
 def map_view(request):
     """Render an interactive Leaflet map of the route and its fuel stops.
 
@@ -46,7 +64,7 @@ def map_view(request):
         request,
         "routing/map.html",
         {
-            "start": request.GET.get("start", "Chicago, IL"),
-            "finish": request.GET.get("finish", "Houston, TX"),
+            "start": request.GET.get("start", DEMO_START),
+            "finish": request.GET.get("finish", DEMO_FINISH),
         },
     )

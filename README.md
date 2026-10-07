@@ -150,6 +150,12 @@ draws the route and fuel stops. Handy for demos:
 
 A **Postman collection** is included: [`postman_collection.json`](postman_collection.json).
 
+### `GET /demo`
+
+Resets the demo to a clean, known state: redirects to the map pre-loaded with
+the canonical Chicago → Houston trip, ignoring any previous input. Open this
+single URL at the start of a screen recording so the demo always looks the same.
+
 #### Errors
 
 | Status | When |
