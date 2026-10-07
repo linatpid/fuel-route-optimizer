@@ -160,7 +160,7 @@ single URL at the start of a screen recording so the demo always looks the same.
 
 | Status | When |
 |--------|------|
-| `400`  | Missing params, or a location that can't be geocoded. |
+| `400`  | Missing params, a location that can't be geocoded, or an endpoint outside the USA (checked for both place names and raw `lat,lon`). |
 | `422`  | A stretch of the route has no fuel station within 500 miles. |
 | `502`  | The routing service is unavailable. |
 

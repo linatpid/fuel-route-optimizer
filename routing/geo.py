@@ -81,6 +81,25 @@ def cumulative_miles(coords: Sequence[tuple[float, float]]) -> list[float]:
     return cum
 
 
+# Approximate lat/lon boxes covering US territory: the contiguous 48 states,
+# mainland Alaska, the Aleutian tail (which crosses the antimeridian), and
+# Hawaii. Used to reject endpoints that fall outside the USA.
+_USA_BOXES = (
+    (24.0, -125.5, 49.5, -66.5),   # contiguous US (min_lat, min_lon, max_lat, max_lon)
+    (51.0, -170.0, 71.6, -129.0),  # mainland Alaska
+    (51.0, 172.0, 54.0, 180.0),    # Aleutian islands past the antimeridian
+    (18.5, -161.0, 22.5, -154.0),  # Hawaii
+)
+
+
+def is_within_usa(lat: float, lon: float) -> bool:
+    """Return True if the point falls within (approximately) US territory."""
+    return any(
+        min_lat <= lat <= max_lat and min_lon <= lon <= max_lon
+        for (min_lat, min_lon, max_lat, max_lon) in _USA_BOXES
+    )
+
+
 def bounding_box(
     coords: Iterable[tuple[float, float]], margin_miles: float
 ) -> tuple[float, float, float, float]:

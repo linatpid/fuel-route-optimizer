@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from django.conf import settings
 
+from routing.geo import is_within_usa
 from routing.services import geocoding, osrm
 from routing.services.optimizer import Candidate, optimize_fuel_stops
 from routing.services.stations import find_stations_along_route
@@ -18,6 +19,15 @@ def plan_route(start: str, finish: str) -> dict:
     """Plan a fuelled route between two locations and build the response dict."""
     origin = geocoding.geocode(start)
     destination = geocoding.geocode(finish)
+
+    # Both endpoints must be within the USA (per the brief). This also guards
+    # raw lat,lon input, which bypasses the US-pinned geocoder.
+    for place, which in ((origin, "start"), (destination, "finish")):
+        if not is_within_usa(place.latitude, place.longitude):
+            raise geocoding.LocationOutsideUSAError(
+                f"The {which} location ({place.label}) is outside the USA; "
+                "both start and finish must be within the USA."
+            )
 
     route = osrm.get_route(
         (origin.latitude, origin.longitude),

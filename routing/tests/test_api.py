@@ -86,6 +86,18 @@ class RouteApiTests(TestCase):
         resp = self.client.get(reverse("route"), {"start": "A"})
         self.assertEqual(resp.status_code, 400)
 
+    def test_non_us_coordinates_rejected(self):
+        # Paris coordinates as the start: validation happens before any OSRM
+        # call, so no routing mock is needed.
+        with mock.patch("routing.services.planner.osrm.get_route") as route_mock:
+            resp = self.client.get(
+                reverse("route"),
+                {"start": "48.8566,2.3522", "finish": "40.0,-90.0"},
+            )
+        self.assertEqual(resp.status_code, 400)
+        self.assertIn("USA", resp.json()["error"])
+        route_mock.assert_not_called()
+
     def test_coordinate_input_skips_geocoding(self):
         # When both inputs are coordinates, geocode must not be called at all.
         with mock.patch(

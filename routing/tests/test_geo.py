@@ -3,6 +3,7 @@ from django.test import SimpleTestCase
 from routing.geo import (
     cumulative_miles,
     haversine_miles,
+    is_within_usa,
     point_to_segment_miles,
 )
 
@@ -31,3 +32,15 @@ class GeoTests(SimpleTestCase):
     def test_point_off_segment_distance_positive(self):
         dist, _ = point_to_segment_miles(40.5, -80.5, 40.0, -80.0, 40.0, -81.0)
         self.assertGreater(dist, 10)
+
+    def test_within_usa_accepts_us_points(self):
+        self.assertTrue(is_within_usa(41.88, -87.63))   # Chicago
+        self.assertTrue(is_within_usa(29.76, -95.37))   # Houston
+        self.assertTrue(is_within_usa(61.22, -149.90))  # Anchorage, AK
+        self.assertTrue(is_within_usa(21.31, -157.86))  # Honolulu, HI
+
+    def test_within_usa_rejects_foreign_and_ocean_points(self):
+        self.assertFalse(is_within_usa(48.8566, 2.3522))    # Paris
+        self.assertFalse(is_within_usa(19.4326, -99.1332))  # Mexico City
+        self.assertFalse(is_within_usa(0.0, -40.0))         # mid-Atlantic
+        self.assertFalse(is_within_usa(51.5074, -0.1278))   # London

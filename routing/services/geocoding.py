@@ -24,6 +24,10 @@ class GeocodingError(Exception):
     pass
 
 
+class LocationOutsideUSAError(GeocodingError):
+    """Raised when a resolved endpoint falls outside the USA."""
+
+
 @dataclass
 class Place:
     latitude: float
